@@ -1,7 +1,6 @@
 import { createContext, useReducer, useEffect, useState } from "react";
 
 export const PostList = createContext({
-  fetching: false,
   postList: [],
   addPost: () => {},
   deletePost: () => {},
@@ -35,34 +34,13 @@ const DUMMY_POSTS = [
 ];
 const PostListProvider = ({ children }) => {
   const [postList, dispatchPostList] = useReducer(postListReducer, DUMMY_POSTS);
-  const [fetching, setFetching] = useState(false);
-
-  //fetching initial data from server
-  useEffect(() => {
-    setFetching(true);
-    fetch("https://dummyjson.com/posts")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch posts.");
-        return res.json();
-      })
-      .then((data) => {
-        dispatchPostList({ type: "INITIAL_POSTS", payload: data.posts });
-        setFetching(false);
-      })
-      .catch((error) => console.error("Error loading posts:", error));
-  }, []);
 
   //postList update methods
-  const addPost = (userId, postTitle, postBody, reaction, tags) => {
+  const addPost = (post) => {
     const newAction = {
       type: "CREATE_POST",
       payload: {
-        id: `${Date.now()}`,
-        title: postTitle,
-        body: postBody,
-        reactions: parseInt(reaction, 10),
-        userId: userId,
-        tags: tags,
+        post,
       },
     };
     dispatchPostList(newAction);
@@ -81,7 +59,6 @@ const PostListProvider = ({ children }) => {
   return (
     <PostList.Provider
       value={{
-        fetching,
         postList,
         addPost,
         deletePost,
