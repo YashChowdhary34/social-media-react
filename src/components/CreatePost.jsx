@@ -18,6 +18,12 @@ const CreatePost = () => {
     const tags = tagsElement.current.value.split(" ");
 
     addPost(userId, postTitle, postBody, reaction, tags);
+
+    userIdElement.current.value = "";
+    postTitleElement.current.value = "";
+    postBodyElement.current.value = "";
+    reactionsElement.current.value = "";
+    tagsElement.current.value = "";
   };
 
   return (
